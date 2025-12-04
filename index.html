@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>文本上传</title>
+  <style>
+    body { font-family: system-ui; max-width: 900px; margin: 30px auto }
+    textarea { width: 100%; height: 300px }
+    input, button { padding: 8px; margin-top: 10px }
+  </style>
+</head>
+<body>
+  <h2>文本上传 / 修改</h2>
+
+  <input id="fileId" placeholder="文本ID（留空则自动生成）" />
+
+  <textarea id="content" placeholder="请输入文本内容"></textarea>
+
+  <br />
+  <button onclick="submitText()">提交</button>
+
+  <p id="result"></p>
+
+  <script>
+    async function submitText() {
+      const id = document.getElementById("fileId").value || Date.now();
+      const content = document.getElementById("content").value;
+
+      const res = await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, content })
+      });
+
+      const data = await res.json();
+      document.getElementById("result").innerHTML =
+        `✅ 成功！<br>访问链接：<br>
+        <a target="_blank" href="/view.html?id=${id}">
+          ${location.origin}/view.html?id=${id}
+        </a>`;
+    }
+  </script>
+</body>
+</html>
